@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 function Auth({ user, onLogin, onLogout }) {
   const [signupData, setSignupData] = useState({ name: '', email: '', password: '' });
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const API_BASE_URL = 'http://localhost:4000/api';
+  const API_BASE_URL = 'http://localhost:5001/api';
 
   const handleSignupChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +20,7 @@ function Auth({ user, onLogin, onLogout }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupData),
