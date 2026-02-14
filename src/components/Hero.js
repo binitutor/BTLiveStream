@@ -5,8 +5,11 @@ function Hero() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [localStream, setLocalStream] = useState(null);
   const [sessionActive, setSessionActive] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const videoRef = useRef(null);
   const callPreviewRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunksRef = useRef([]);
 
   const startLocalStream = async () => {
     if (localStream) return;
@@ -88,6 +91,74 @@ function Hero() {
 
   const handleToggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
+  };
+
+  const handleStartRecording = () => {
+    if (!localStream) {
+      Swal.fire({
+        title: 'Camera not active',
+        text: 'Please start your camera before recording.',
+        icon: 'warning',
+        confirmButtonColor: '#234756',
+      });
+      return;
+    }
+
+    recordedChunksRef.current = [];
+    const mediaRecorder = new MediaRecorder(localStream, {
+      mimeType: 'video/webm;codecs=vp8,opus',
+    });
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        recordedChunksRef.current.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `recording-${new Date().getTime()}.webm`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      Swal.fire({
+        title: 'Recording saved',
+        text: 'Your session recording has been downloaded.',
+        icon: 'success',
+        confirmButtonColor: '#234756',
+      });
+    };
+
+    mediaRecorder.start();
+    mediaRecorderRef.current = mediaRecorder;
+    setIsRecording(true);
+
+    Swal.fire({
+      title: 'Recording started',
+      text: 'Your live session is now being recorded.',
+      icon: 'info',
+      confirmButtonColor: '#234756',
+    });
+  };
+
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handleToggleRecording = () => {
+    if (isRecording) {
+      handleStopRecording();
+    } else {
+      handleStartRecording();
+    }
   };
 
   useEffect(() => {
@@ -183,6 +254,15 @@ function Hero() {
                   {localStream?.getAudioTracks().some((t) => t.enabled)
                     ? 'Mute'
                     : 'Unmute'}
+                </button>
+                <button
+                  className={`btn ${isRecording ? 'btn-danger' : 'btn-outline-primary'}`}
+                  onClick={handleToggleRecording}
+                  disabled={!sessionActive}
+                  title={isRecording ? 'Stop recording' : 'Start recording'}
+                >
+                  <i className="bi bi-camera-video" style={{ marginRight: '6px' }}></i>
+                  {isRecording ? 'Stop Recording' : 'Record'}
                 </button>
                 <button
                   className="btn btn-outline-primary"
