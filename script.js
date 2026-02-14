@@ -245,7 +245,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const startSessionBtn = document.getElementById("startSessionBtn");
   const toggleCameraBtn = document.getElementById("toggleCameraBtn");
   const toggleMicBtn = document.getElementById("toggleMicBtn");
+  const toggleFullscreenBtn = document.getElementById("toggleFullscreenBtn");
   const endSessionBtn = document.getElementById("endSessionBtn");
+  const callPreview = document.querySelector(".call-preview");
 
   let localStream = null;
   let sessionActive = false;
@@ -348,10 +350,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  if (toggleFullscreenBtn && callPreview) {
+    toggleFullscreenBtn.addEventListener("click", () => {
+      callPreview.classList.toggle("fullscreen");
+      toggleFullscreenBtn.textContent = callPreview.classList.contains("fullscreen")
+        ? "Exit Fullscreen"
+        : "Fullscreen";
+    });
+  }
+
   if (endSessionBtn) {
     endSessionBtn.addEventListener("click", () => {
       sessionActive = false;
       stopLocalStream();
+      if (callPreview && callPreview.classList.contains("fullscreen")) {
+        callPreview.classList.remove("fullscreen");
+        if (toggleFullscreenBtn) {
+          toggleFullscreenBtn.textContent = "Fullscreen";
+        }
+      }
       Swal.fire({
         title: "Session ended",
         text: "Your live session has been closed.",
