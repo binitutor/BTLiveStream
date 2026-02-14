@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
+import { sessionsAPI } from '../api';
 
 function Sessions({ user }) {
   const [joinRoomId, setJoinRoomId] = useState('');
@@ -45,8 +46,6 @@ function Sessions({ user }) {
       statusColor: 'success',
     },
   ]);
-
-  const API_BASE_URL = 'http://localhost:4000/api';
 
   const scrollToCreateSession = () => {
     const form = document.getElementById('createSessionForm');
@@ -104,24 +103,11 @@ function Sessions({ user }) {
     }
 
     try {
-      const token = localStorage.getItem('btls_token');
-      const response = await fetch(`${API_BASE_URL}/sessions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(createSessionData),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Unable to create session');
-      }
+      const data = await sessionsAPI.create(createSessionData);
 
       Swal.fire({
         title: 'Session created',
-        text: `Room ID: ${data.session.room_id}`,
+        text: `Room Code: ${data.session.room_code}`,
         icon: 'success',
         confirmButtonColor: '#234756',
       });
