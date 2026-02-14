@@ -143,6 +143,30 @@ body {
   margin-top: 18px;
 }
 
+.call-preview.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  z-index: 9999;
+  padding: 24px;
+  overflow: auto;
+}
+
+.call-preview.fullscreen .call-preview__grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  min-height: 60vh;
+}
+
+.call-preview.fullscreen .video-tile {
+  min-height: 300px;
+}
+
 .feature-card,
 .stat-card,
 .chart-card,
@@ -186,41 +210,6 @@ body {
 .footer {
   background: var(--surface);
   padding: 32px 0;
-}
-
-.dataTables_wrapper .dataTables_paginate .page-item.active .page-link {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.dataTables_wrapper .dataTables_filter input {
-  border-radius: 8px;
-  border: 1px solid rgba(35, 71, 86, 0.2);
-  padding: 6px 10px;
-}
-
-.call-preview.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-  z-index: 9999;
-  padding: 24px;
-  overflow: auto;
-}
-
-.call-preview.fullscreen .call-preview__grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  min-height: 60vh;
-}
-
-.call-preview.fullscreen .video-tile {
-  min-height: 300px;
 }
 
 @media (max-width: 991px) {
