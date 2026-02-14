@@ -4,12 +4,12 @@
   "description": "BT Live Stream - Peer-to-peer video call platform",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.1",
+    "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
     "sweetalert2": "^11.10.4"
   },
   "scripts": {
@@ -34,5 +34,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-devtools": "^7.0.1"
   }
 }
