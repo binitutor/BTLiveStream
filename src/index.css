@@ -84,6 +84,12 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  gap: 12px;
+}
+
+.screen-toggle {
+  display: flex;
+  align-items: center;
 }
 
 .status-pill {
@@ -135,6 +141,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  grid-auto-flow: dense;
 }
 
 .video-tile {
@@ -148,6 +155,13 @@ body {
   font-weight: 600;
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.video-tile--expanded {
+  grid-column: 1 / -1;
+  min-height: 300px;
+  border: 3px solid var(--secondary);
 }
 
 .video-tile--primary {

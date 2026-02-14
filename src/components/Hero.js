@@ -6,6 +6,8 @@ function Hero() {
   const [localStream, setLocalStream] = useState(null);
   const [sessionActive, setSessionActive] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [selectedTile, setSelectedTile] = useState(null);
+  const [layoutMode, setLayoutMode] = useState('grid'); // 'grid' or 'speaker'
   const videoRef = useRef(null);
   const callPreviewRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -91,6 +93,10 @@ function Hero() {
 
   const handleToggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
+  };
+
+  const handleTileClick = (tileId) => {
+    setSelectedTile(selectedTile === tileId ? null : tileId);
   };
 
   const handleStartRecording = () => {
@@ -211,12 +217,28 @@ function Hero() {
                   <h5 className="mb-1">Live Call Preview</h5>
                   <small className="text-muted">Room: BT-8921-ALPHA</small>
                 </div>
+                <span className="screen-toggle">
+                  {sessionActive && (
+                    <button
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={() => setLayoutMode(layoutMode === 'grid' ? 'speaker' : 'grid')}
+                      title={layoutMode === 'grid' ? 'Switch to speaker layout' : 'Switch to grid layout'}
+                    >
+                      <i className={`fa-solid ${layoutMode === 'grid' ? 'fa-table-cells' : 'fa-presentation-screen'}`} style={{ marginRight: '4px' }}></i>
+                      {layoutMode === 'grid' ? 'Grid' : 'Speaker'}
+                    </button>
+                  )}
+                </span>
                 <span className={`status-pill ${isRecording ? 'status-pill--recording' : sessionActive ? 'status-pill--live' : 'status-pill--offline'}`}>
                   {isRecording ? 'RECORDING' : sessionActive ? 'LIVE' : 'OFFLINE'}
                 </span>
               </div>
               <div className="call-preview__grid">
-                <div className="video-tile video-tile--primary video-tile--live">
+                <div 
+                  className={`video-tile video-tile--primary video-tile--live ${layoutMode === 'speaker' && selectedTile === 'local' ? 'video-tile--expanded' : ''}`}
+                  onClick={() => layoutMode === 'speaker' && handleTileClick('local')}
+                  style={{ cursor: layoutMode === 'speaker' ? 'pointer' : 'default', order: layoutMode === 'speaker' ? (selectedTile === 'local' ? -1 : 1) : 'unset' }}
+                >
                   <video
                     ref={videoRef}
                     autoPlay
@@ -225,13 +247,25 @@ function Hero() {
                   ></video>
                   <span>Local Camera</span>
                 </div>
-                <div className="video-tile">
+                <div 
+                  className={`video-tile ${layoutMode === 'speaker' && selectedTile === 'guestA' ? 'video-tile--expanded' : ''}`}
+                  onClick={() => layoutMode === 'speaker' && handleTileClick('guestA')}
+                  style={{ cursor: layoutMode === 'speaker' ? 'pointer' : 'default', order: layoutMode === 'speaker' ? (selectedTile === 'guestA' ? -1 : 2) : 'unset' }}
+                >
                   <span>Guest A</span>
                 </div>
-                <div className="video-tile">
+                <div 
+                  className={`video-tile ${layoutMode === 'speaker' && selectedTile === 'guestB' ? 'video-tile--expanded' : ''}`}
+                  onClick={() => layoutMode === 'speaker' && handleTileClick('guestB')}
+                  style={{ cursor: layoutMode === 'speaker' ? 'pointer' : 'default', order: layoutMode === 'speaker' ? (selectedTile === 'guestB' ? -1 : 3) : 'unset' }}
+                >
                   <span>Guest B</span>
                 </div>
-                <div className="video-tile">
+                <div 
+                  className={`video-tile ${layoutMode === 'speaker' && selectedTile === 'guestC' ? 'video-tile--expanded' : ''}`}
+                  onClick={() => layoutMode === 'speaker' && handleTileClick('guestC')}
+                  style={{ cursor: layoutMode === 'speaker' ? 'pointer' : 'default', order: layoutMode === 'speaker' ? (selectedTile === 'guestC' ? -1 : 4) : 'unset' }}
+                >
                   <span>Guest C</span>
                 </div>
               </div>
