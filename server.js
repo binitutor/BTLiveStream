@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const { pool } = require('./config/database');
 
 // Load environment variables
@@ -9,9 +10,16 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from React build directory in production
+const buildPath = path.join(__dirname, 'build');
+app.use(express.static(buildPath));
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -29,6 +37,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'BTLiveStream API is running' });
 });
 
+// Serve React frontend for all other routes (client-side routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+    // If build doesn't exist, just send a message
+    if (err) {
+      res.status(200).json({ 
+        status: 'OK', 
+        message: 'BTLiveStream API is running',
+        note: 'React frontend not built yet. Run: npm run build:react'
+      });
+    }
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -39,7 +61,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.SERVER_PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`BTLiveStream server running on port ${PORT}`);

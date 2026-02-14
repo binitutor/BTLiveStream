@@ -79,3 +79,13 @@ Message Types
 - { "type": "join", "roomId": "BT-XXXX-YYYY" }
 - { "type": "signal", "roomId": "BT-XXXX-YYYY", "payload": { ... } }
 - { "type": "leave" }
+
+Deployment
+----------
+For production deployment to Heroku, see [HEROKU_DEPLOYMENT.md](HEROKU_DEPLOYMENT.md).
+
+The project is configured with:
+- Procfile for Heroku process management
+- Automatic database initialization on deployment
+- React static file serving from Express
+- Environment variable configuration for Heroku PostgreSQL
