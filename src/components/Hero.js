@@ -211,7 +211,9 @@ function Hero() {
                   <h5 className="mb-1">Live Call Preview</h5>
                   <small className="text-muted">Room: BT-8921-ALPHA</small>
                 </div>
-                <span className="status-pill">LIVE</span>
+                <span className={`status-pill ${isRecording ? 'status-pill--recording' : sessionActive ? 'status-pill--live' : 'status-pill--offline'}`}>
+                  {isRecording ? 'RECORDING' : sessionActive ? 'LIVE' : 'OFFLINE'}
+                </span>
               </div>
               <div className="call-preview__grid">
                 <div className="video-tile video-tile--primary video-tile--live">
@@ -238,19 +240,25 @@ function Hero() {
                   className="btn btn-primary"
                   onClick={handleStartSession}
                   disabled={sessionActive}
+                  title="Start a live video session"
                 >
+                  <i className="fa fa-video" style={{ marginRight: '6px' }}></i>
                   Start Live Session
                 </button>
                 <button
                   className="btn btn-outline-primary"
                   onClick={handleToggleCamera}
+                  title={localStream ? 'Turn off camera' : 'Turn on camera'}
                 >
+                  <i className={`fa ${localStream ? 'fa-camera-slash' : 'fa-camera'}`} style={{ marginRight: '6px' }}></i>
                   {localStream ? 'Turn Off Camera' : 'Turn On Camera'}
                 </button>
                 <button
                   className="btn btn-outline-primary"
                   onClick={handleToggleMic}
+                  title={localStream?.getAudioTracks().some((t) => t.enabled) ? 'Mute microphone' : 'Unmute microphone'}
                 >
+                  <i className={`fa ${localStream?.getAudioTracks().some((t) => t.enabled) ? 'fa-microphone' : 'fa-microphone-slash'}`} style={{ marginRight: '6px' }}></i>
                   {localStream?.getAudioTracks().some((t) => t.enabled)
                     ? 'Mute'
                     : 'Unmute'}
@@ -261,20 +269,24 @@ function Hero() {
                   disabled={!sessionActive}
                   title={isRecording ? 'Stop recording' : 'Start recording'}
                 >
-                  <i className="bi bi-camera-video" style={{ marginRight: '6px' }}></i>
+                  <i className={`fa ${isRecording ? 'fa-circle-stop' : 'fa-circle-play'}`} style={{ marginRight: '6px' }}></i>
                   {isRecording ? 'Stop Recording' : 'Record'}
                 </button>
                 <button
                   className="btn btn-outline-primary"
                   onClick={handleToggleFullscreen}
+                  title={isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'}
                 >
+                  <i className={`fa ${isFullscreen ? 'fa-compress' : 'fa-expand'}`} style={{ marginRight: '6px' }}></i>
                   {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
                 </button>
                 <button
                   className="btn btn-danger"
                   onClick={handleEndSession}
                   disabled={!sessionActive}
+                  title="End the live session"
                 >
+                  <i className="fa fa-stop" style={{ marginRight: '6px' }}></i>
                   End
                 </button>
               </div>

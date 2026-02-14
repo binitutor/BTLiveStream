@@ -96,6 +96,41 @@ body {
   letter-spacing: 0.05em;
 }
 
+.status-pill--offline {
+  background: #999;
+  color: #fff;
+}
+
+.status-pill--live {
+  background: var(--secondary);
+  color: #fff;
+  animation: pulse-live 2s infinite;
+}
+
+.status-pill--recording {
+  background: #dc3545;
+  color: #fff;
+  animation: pulse-recording 1s infinite;
+}
+
+@keyframes pulse-live {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse-recording {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+  }
+}
+
 .call-preview__grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
